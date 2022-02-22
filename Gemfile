@@ -28,6 +28,11 @@ gem 'jbuilder', '~> 2.7'
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.4.4', require: false
 
+gem 'slim-rails'
+
+# See https://github.com/hashrocket/decent_exposure
+gem 'decent_exposure', '~> 3.0'
+
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
@@ -59,6 +64,8 @@ group :test do
 
   # See https://github.com/thoughtbot/shoulda-matchers
   gem 'shoulda-matchers', '~> 5.0'
+
+  gem 'rails-controller-testing'
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
