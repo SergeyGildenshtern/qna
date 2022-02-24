@@ -1,8 +1,9 @@
 require 'rails_helper'
 
 feature 'User can sign out', "
-  As an unauthenticated user
-  I have no way to sign out
+  In order to change the account
+  As an authenticated user
+  I'd like to be able to sign out
 " do
   given(:user) { create(:user) }
 
