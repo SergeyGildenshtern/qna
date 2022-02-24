@@ -9,14 +9,14 @@ feature 'User can sign out', "
 
   background { visit root_path }
 
-  scenario 'Registered user tries to sign out' do
+  scenario 'Authenticated user tries to sign out' do
     login(user)
     click_on 'Sign out'
 
     expect(page).to have_content 'Signed out successfully.'
   end
 
-  scenario 'Unregistered user tries to sign out' do
+  scenario 'Unauthenticated user tries to sign out' do
     expect(page).to_not have_content 'Sign out'
   end
 end
