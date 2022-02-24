@@ -2,6 +2,9 @@ require 'rails_helper'
 
 RSpec.describe QuestionsController, type: :controller do
   let(:question) { create(:question) }
+  let(:user) { create(:user) }
+
+  before { login(user) }
 
   describe 'POST #create' do
     context 'with valid attributes' do
@@ -11,7 +14,7 @@ RSpec.describe QuestionsController, type: :controller do
 
       it 'redirects to show view' do
         post :create, params: { question: attributes_for(:question) }
-        expect(response).to redirect_to assigns(:question)
+        expect(response).to redirect_to assigns(:exposed_question)
       end
     end
 
