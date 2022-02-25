@@ -1,9 +1,8 @@
 require 'rails_helper'
 
 feature 'User can browse questions', "
-  In order to get answer from a community
-  As an authenticated user
-  I'd like to be able to ask the question
+  In order to answer the questions
+  I'd like to be able to browse questions
 " do
   given(:user) { create(:user) }
   given!(:questions) { [create(:question), create(:question), create(:question)] }

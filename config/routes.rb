@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
   devise_for :users
   resources :questions do
-    resources :answers, except: :index, shallow: true
+    resources :answers, except: %i[index show], shallow: true
   end
 
   root to: 'questions#index'
