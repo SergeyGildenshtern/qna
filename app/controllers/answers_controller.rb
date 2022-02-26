@@ -1,9 +1,11 @@
 class AnswersController < ApplicationController
   before_action :authenticate_user!
   expose :question
-  expose :answer, build: ->(params) { question.answers.new(params) }
+  expose :answer
 
   def create
+    answer.question = question
+    answer.author = current_user
     if answer.save
       redirect_to question, notice: 'Your answer successfully created.'
     else
@@ -21,7 +23,7 @@ class AnswersController < ApplicationController
 
   def destroy
     answer.destroy
-    redirect_to answer.question
+    redirect_to answer.question, notice: 'Your answer successfully deleted.'
   end
 
   private
