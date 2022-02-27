@@ -25,6 +25,8 @@ class AnswersController < ApplicationController
     if current_user.author?(answer)
       answer.destroy
       redirect_to answer.question, notice: 'Your answer successfully deleted.'
+    else
+      redirect_to answer.question
     end
   end
 
