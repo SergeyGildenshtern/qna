@@ -8,6 +8,6 @@ class User < ApplicationRecord
   has_many :answers, foreign_key: 'author_id', dependent: :destroy
 
   def author?(obj)
-    questions.include?(obj) || answers.include?(obj)
+    obj.author == self
   end
 end
