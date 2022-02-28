@@ -1,26 +1,33 @@
 class AnswersController < ApplicationController
+  before_action :authenticate_user!
   expose :question
-  expose :answer, build: ->(params) { question.answers.new(params) }
+  expose :answer
 
   def create
+    answer.question = question
+    answer.author = current_user
     if answer.save
-      redirect_to question
+      redirect_to question, notice: 'Your answer successfully created.'
     else
-      render :new
+      render 'questions/show'
     end
   end
 
   def update
     if answer.update(answer_params)
-      redirect_to answer
+      redirect_to answer.question
     else
-      render :edit
+      render 'questions/show'
     end
   end
 
   def destroy
-    answer.destroy
-    redirect_to answer.question
+    if current_user.author?(answer)
+      answer.destroy
+      redirect_to answer.question, notice: 'Your answer successfully deleted.'
+    else
+      redirect_to answer.question
+    end
   end
 
   private
