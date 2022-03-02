@@ -1,24 +1,14 @@
 class AnswersController < ApplicationController
   before_action :authenticate_user!
   expose :question
-  expose :answer
+  expose :answer, build: ->(answer_params) { question.answers.new(answer_params.merge(author: current_user)) }
 
   def create
-    answer.question = question
-    answer.author = current_user
-    if answer.save
-      redirect_to question, notice: 'Your answer successfully created.'
-    else
-      render 'questions/show'
-    end
+    answer.save
   end
 
   def update
-    if answer.update(answer_params)
-      redirect_to answer.question
-    else
-      render 'questions/show'
-    end
+    answer.update(answer_params)
   end
 
   def destroy
