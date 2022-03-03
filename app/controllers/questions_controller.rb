@@ -1,11 +1,10 @@
 class QuestionsController < ApplicationController
   before_action :authenticate_user!, except: %i[index show]
   expose :questions, -> { Question.all }
-  expose :question
+  expose :question, build: ->(question_params) { Question.new(question_params.merge(author: current_user)) }
   expose :answer, -> { question.answers.new }
 
   def create
-    question.author = current_user
     if question.save
       redirect_to question, notice: 'Your question successfully created.'
     else
@@ -14,11 +13,7 @@ class QuestionsController < ApplicationController
   end
 
   def update
-    if question.update(question_params)
-      redirect_to question
-    else
-      render :edit
-    end
+    question.update(question_params)
   end
 
   def destroy

@@ -33,7 +33,7 @@ feature 'User can create answer', "
     end
   end
 
-  scenario 'Unauthenticated user tries to answer the question', js: true do
+  scenario 'Unauthenticated user tries to answer the question' do
     visit question_path(question)
     click_on 'Answer'
 

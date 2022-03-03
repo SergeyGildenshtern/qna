@@ -1,8 +1,19 @@
-h1= question.title
-p= question.body
+h1.title= question.title
+p.question= question.body
 
 - if current_user&.author? question
-  p= link_to 'Delete question', question_path(question), method: :delete
+  = link_to 'Delete question', question_path(question), method: :delete
+  br
+  = link_to 'Edit question', '#', class: 'edit-question-link'
+  .question-errors
+  = form_with model: question, html: { id: "edit-question" }, class: 'hidden', local: false do |f|
+    p
+      = f.label :title
+      = f.text_field :title
+    p
+      = f.label :body, 'Question'
+      = f.text_area :body
+    p= f.submit 'Save'
 
 .answer-errors
   = render 'shared/errors', resource: answer

@@ -44,7 +44,7 @@ feature 'User can edit his answer', "
       end
     end
 
-    scenario "tries to edit other user's question" do
+    scenario "tries to edit other user's answer" do
       visit question_path(other_answer.question)
 
       expect(page).to_not have_link 'Edit'
