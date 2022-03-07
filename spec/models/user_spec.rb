@@ -4,7 +4,7 @@ RSpec.describe User, type: :model do
   it { should have_many(:questions).dependent(:destroy) }
   it { should have_many(:answers).dependent(:destroy) }
 
-  context 'verification of user authorship' do
+  describe 'Verification of user authorship' do
     let(:user) { create(:user) }
     let(:question1) { create(:question, author: user) }
     let(:question2) { create(:question) }

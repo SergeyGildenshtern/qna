@@ -2,7 +2,7 @@ class QuestionsController < ApplicationController
   before_action :authenticate_user!, except: %i[index show]
   expose :questions, -> { Question.all }
   expose :question, build: ->(question_params) { Question.new(question_params.merge(author: current_user)) }
-  expose :answer, -> { question.answers.new }
+  expose :answer, -> { Answer.new }
 
   def create
     if question.save

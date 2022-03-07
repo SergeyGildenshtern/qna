@@ -15,10 +15,10 @@ p.question= question.body
       = f.text_area :body
     p= f.submit 'Save'
 
-.answer-errors
-  = render 'shared/errors', resource: answer
-
 = render 'answers/form'
 
 .answers
-  = render question.answers
+  .best-answer
+    - if question.best_answer
+      = render 'answers/best_answer', answer: question.best_answer
+  = render question.answers_without_best

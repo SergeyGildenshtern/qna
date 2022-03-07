@@ -9,7 +9,11 @@ RSpec.describe AnswersController, type: :controller do
   describe 'POST #create' do
     context 'with valid attributes' do
       it 'saves the new answer in the database' do
-        expect { post :create, params: { answer: attributes_for(:answer), question_id: question }, format: :js }.to change(question.answers, :count).by(1)
+        expect {
+          post :create,
+               params: { answer: attributes_for(:answer), question_id: question },
+               format: :js
+        }.to change(question.answers, :count).by(1)
       end
 
       it 'renders create template' do
@@ -20,7 +24,11 @@ RSpec.describe AnswersController, type: :controller do
 
     context 'with invalid attributes' do
       it 'does not save the question' do
-        expect { post :create, params: { answer: attributes_for(:answer, :invalid), question_id: question }, format: :js }.to_not change(Answer, :count)
+        expect {
+          post :create,
+               params: { answer: attributes_for(:answer, :invalid), question_id: question },
+               format: :js
+        }.to_not change(Answer, :count)
       end
 
       it 'renders create template' do
@@ -84,6 +92,35 @@ RSpec.describe AnswersController, type: :controller do
       it 'renders destroy view' do
         delete :destroy, params: { id: answer }, format: :js
         expect(response).to render_template :destroy
+      end
+    end
+  end
+
+  describe 'PUT #update_best' do
+    context 'author of question' do
+      let(:question) { create(:question, author: user) }
+      let!(:answer) { create(:answer, question: question) }
+
+      it 'changes answer attribute' do
+        expect { put :update_best, params: { id: answer }, format: :js }.to change(question, :best_answer).from(nil).to(answer)
+      end
+
+      it 'renders update_best view' do
+        put :update_best, params: { id: answer }, format: :js
+        expect(response).to render_template :update_best
+      end
+    end
+
+    context 'not author of question' do
+      let!(:answer) { create(:answer, question: question) }
+
+      it 'does not changes answer attribute' do
+        expect { put :update_best, params: { id: answer }, format: :js }.to_not change(question, :best_answer)
+      end
+
+      it 'renders update_best view' do
+        put :update_best, params: { id: answer }, format: :js
+        expect(response).to render_template :update_best
       end
     end
   end

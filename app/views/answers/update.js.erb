@@ -1,5 +1,9 @@
 $('.answer[data-answer-id='+ <%= answer.id %> +'] .errors').html('<%= render 'shared/errors', resource: answer %>');
 
 <% if answer.errors.blank? %>
-  $('.answer[data-answer-id='+ <%= answer.id %> +']').replaceWith('<%= j render answer %>');
+  <% if answer.question.best_answer == answer %>
+    $('.answer[data-answer-id='+ <%= answer.id %> +']').replaceWith('<%= j render 'best_answer', answer: answer %>');
+  <% else %>
+    $('.answer[data-answer-id='+ <%= answer.id %> +']').replaceWith('<%= j render answer %>');
+  <% end %>
 <% end %>
