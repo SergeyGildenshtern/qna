@@ -1,0 +1,9 @@
+$('.question-errors').html('<%= render 'shared/errors', resource: question %>');
+
+<% if question.errors.blank? %>
+  $('form#edit-question').addClass('hidden');
+  $('.edit-question-link').show();
+
+  $('.title').html('<%= j question.title %>');
+  $('.question').html('<%= j question.body %>');
+<% end %>

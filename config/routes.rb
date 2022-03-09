@@ -1,7 +1,11 @@
 Rails.application.routes.draw do
   devise_for :users
   resources :questions do
-    resources :answers, except: %i[index show], shallow: true
+    resources :answers, only: %i[create update destroy], shallow: true do
+      member do
+        put :update_best
+      end
+    end
   end
 
   root to: 'questions#index'

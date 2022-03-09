@@ -1,68 +1,69 @@
 require 'rails_helper'
 
 RSpec.describe AnswersController, type: :controller do
-  let(:answer) { create(:answer, question: create(:question)) }
-  let(:user) { create(:user) }
+  let(:question) { create :question }
+  let(:user) { create :user }
 
   before { login(user) }
 
   describe 'POST #create' do
-    let!(:answer) { create(:answer, question: create(:question)) }
-
     context 'with valid attributes' do
-      it 'saves a new answer in the database' do
+      it 'saves the new answer in the database' do
         expect {
-          post :create, params: { question_id: answer.question,
-                                  answer: attributes_for(:answer) } }.to change(answer.question.answers, :count).by(1)
+          post :create,
+               params: { answer: attributes_for(:answer), question_id: question },
+               format: :js
+        }.to change(question.answers, :count).by(1)
       end
 
-      it 'redirects to question' do
-        post :create, params: { question_id: answer.question, answer: attributes_for(:answer) }
-        expect(response).to redirect_to answer.question
+      it 'renders create template' do
+        post :create, params: { answer: attributes_for(:answer), question_id: question, format: :js }
+        expect(response).to render_template :create
       end
     end
 
     context 'with invalid attributes' do
-      it 'does not save the answer' do
+      it 'does not save the question' do
         expect {
-          post :create, params: { question_id: answer.question,
-                                  answer: attributes_for(:answer, :invalid) } }.to_not change(Answer, :count)
+          post :create,
+               params: { answer: attributes_for(:answer, :invalid), question_id: question },
+               format: :js
+        }.to_not change(Answer, :count)
       end
 
-      it 're-renders question view' do
-        post :create, params: { question_id: answer.question, answer: attributes_for(:answer, :invalid) }
-        expect(response).to render_template 'questions/show'
+      it 'renders create template' do
+        post :create, params: { answer: attributes_for(:answer, :invalid), question_id: question, format: :js }
+        expect(response).to render_template :create
       end
     end
   end
 
   describe 'PATCH #update' do
+    let!(:answer) { create(:answer, question: question) }
+
     context 'with valid attributes' do
       it 'changes answer attributes' do
-        patch :update, params: { id: answer, answer: { body: 'new body' } }
+        patch :update, params: { id: answer, answer: { body: 'new body' } }, format: :js
         answer.reload
-
         expect(answer.body).to eq 'new body'
       end
 
-      it 'redirects to question' do
-        patch :update, params: { id: answer, answer: attributes_for(:answer) }
-        expect(response).to redirect_to answer.question
+      it 'renders update view' do
+        patch :update, params: { id: answer, answer: { body: 'new body' } }, format: :js
+        expect(response).to render_template :update
       end
     end
 
     context 'with invalid attributes' do
-      before { patch :update, params: { id: answer, answer: attributes_for(:answer, :invalid) } }
-
-      it 'does not change answer' do
-        body = answer.body
-        answer.reload
-
-        expect(answer.body).to eq body
+      it 'does not change answer attributes' do
+        expect do
+          patch :update, params: { id: answer, answer: attributes_for(:answer, :invalid) }, format: :js
+        end.to_not change(answer, :body)
       end
 
-      it 're-renders question view' do
-        expect(response).to render_template 'questions/show'
+      it 'renders update view' do
+        patch :update, params: { id: answer, answer: attributes_for(:answer, :invalid) }, format: :js
+        expect(response).to render_template :update
       end
     end
   end
@@ -72,12 +73,12 @@ RSpec.describe AnswersController, type: :controller do
       let!(:answer) { create(:answer, author: user) }
 
       it 'deletes the answer' do
-        expect { delete :destroy, params: { id: answer } }.to change(Answer, :count).by(-1)
+        expect { delete :destroy, params: { id: answer }, format: :js }.to change(Answer, :count).by(-1)
       end
 
-      it 'redirects to question' do
-        delete :destroy, params: { id: answer }
-        expect(response).to redirect_to answer.question
+      it 'renders destroy view' do
+        delete :destroy, params: { id: answer }, format: :js
+        expect(response).to render_template :destroy
       end
     end
 
@@ -85,12 +86,41 @@ RSpec.describe AnswersController, type: :controller do
       let!(:answer) { create(:answer) }
 
       it 'does not deletes the answer' do
-        expect { delete :destroy, params: { id: answer } }.to_not change(Answer, :count)
+        expect { delete :destroy, params: { id: answer }, format: :js }.to_not change(Answer, :count)
       end
 
-      it 'redirects to question' do
-        delete :destroy, params: { id: answer }
-        expect(response).to redirect_to answer.question
+      it 'renders destroy view' do
+        delete :destroy, params: { id: answer }, format: :js
+        expect(response).to render_template :destroy
+      end
+    end
+  end
+
+  describe 'PUT #update_best' do
+    context 'author of question' do
+      let(:question) { create(:question, author: user) }
+      let!(:answer) { create(:answer, question: question) }
+
+      it 'changes answer attribute' do
+        expect { put :update_best, params: { id: answer }, format: :js }.to change(question, :best_answer).from(nil).to(answer)
+      end
+
+      it 'renders update_best view' do
+        put :update_best, params: { id: answer }, format: :js
+        expect(response).to render_template :update_best
+      end
+    end
+
+    context 'not author of question' do
+      let!(:answer) { create(:answer, question: question) }
+
+      it 'does not changes answer attribute' do
+        expect { put :update_best, params: { id: answer }, format: :js }.to_not change(question, :best_answer)
+      end
+
+      it 'renders update_best view' do
+        put :update_best, params: { id: answer }, format: :js
+        expect(response).to render_template :update_best
       end
     end
   end
