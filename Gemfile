@@ -36,6 +36,8 @@ gem 'decent_exposure', '~> 3.0'
 gem 'devise'
 
 gem 'jquery-rails'
+# See https://github.com/aws/aws-sdk-ruby
+gem 'aws-sdk-s3', '~> 1'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console

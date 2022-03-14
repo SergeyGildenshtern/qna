@@ -13,6 +13,7 @@ feature 'User can edit his answer', "
 
   describe 'Authenticated user', js: true do
     background do
+      answer.files.attach(create_file_blob)
       login(user)
 
       visit question_path(question)
@@ -28,6 +29,20 @@ feature 'User can edit his answer', "
         expect(page).to_not have_content answer.body
         expect(page).to have_content 'edited answer'
         expect(page).to_not have_selector 'textarea'
+      end
+    end
+
+    scenario 'edits his answer with new attached file' do
+      within '.answers' do
+        click_on 'Edit'
+        attach_file 'File', %W[#{Rails.root}/spec/rails_helper.rb #{Rails.root}/spec/spec_helper.rb]
+        click_on 'Save'
+      end
+
+      within '.answer-files' do
+        expect(page).to have_link 'image.jpg'
+        expect(page).to have_link 'rails_helper.rb'
+        expect(page).to have_link 'spec_helper.rb'
       end
     end
 
