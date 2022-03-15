@@ -12,6 +12,7 @@ feature 'User can edit his question', "
 
   describe 'Authenticated user', js: true do
     background do
+      question.files.attach(create_file_blob)
       login(user)
 
       visit question_path(question)
@@ -26,6 +27,20 @@ feature 'User can edit his question', "
       expect(page).to have_content 'edited question'
       expect(page).to_not have_selector 'input#question_title'
       expect(page).to_not have_selector 'textarea#question_body'
+    end
+
+    scenario 'edits his question with new attached file' do
+      click_on 'Edit question'
+      within '#edit-question' do
+        attach_file 'File', %W[#{Rails.root}/spec/rails_helper.rb #{Rails.root}/spec/spec_helper.rb]
+        click_on 'Save'
+      end
+
+      within '.question-files' do
+        expect(page).to have_link 'image.jpg'
+        expect(page).to have_link 'rails_helper.rb'
+        expect(page).to have_link 'spec_helper.rb'
+      end
     end
 
     scenario 'edits his question with errors' do

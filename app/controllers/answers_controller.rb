@@ -1,7 +1,9 @@
 class AnswersController < ApplicationController
   before_action :authenticate_user!
   expose :question
-  expose :answer, build: ->(answer_params) { question.answers.new(answer_params.merge(author: current_user)) }
+  expose :answer,
+         build: ->(answer_params) { question.answers.new(answer_params.merge(author: current_user)) },
+         find: -> { Answer.with_attached_files.find(params[:id]) }
 
   def create
     answer.save
@@ -22,6 +24,6 @@ class AnswersController < ApplicationController
   private
 
   def answer_params
-    params.require(:answer).permit(:body)
+    params.require(:answer).permit(:body, files: [])
   end
 end
