@@ -37,4 +37,3 @@ feature 'User can add reward to question', %q{
     end
   end
 end
-
