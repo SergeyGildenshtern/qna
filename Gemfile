@@ -38,6 +38,10 @@ gem 'devise'
 gem 'jquery-rails'
 # See https://github.com/aws/aws-sdk-ruby
 gem 'aws-sdk-s3', '~> 1'
+# https://github.com/perfectline/validates_url
+gem 'validate_url'
+# See https://github.com/nathanvda/cocoon
+gem "cocoon"
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console

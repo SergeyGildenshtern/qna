@@ -1,0 +1,12 @@
+- if resource.links.present?
+  p Links:
+  ul
+    - resource.links.each do |link|
+      li*{data: {link: {id: link.id} } }
+        - if link.gist?
+          = javascript_include_tag link.url + ".js", async: false
+        - else
+          = link_to link.name, link.url
+        - if current_user&.author? resource
+          = form_with url: link_path(link), method: :delete, local: false do |f|
+            = f.submit 'Delete link'

@@ -1,0 +1,4 @@
+tr
+  td= image_tag reward.image, width: 200, height: 200
+  td= reward.name
+  td= link_to reward.question.title, question_path(reward.question)

@@ -10,6 +10,8 @@ require 'rspec/rails'
 require 'factory_bot'
 Dir[Rails.root.join('spec', 'factories', '*.rb')].sort.each { |f| require f }
 
+require 'validate_url/rspec_matcher'
+
 # Add additional requires below this line. Rails is not loaded until this point!
 
 # Requires supporting ruby files with custom matchers and macros, etc, in
@@ -43,7 +45,7 @@ RSpec.configure do |config|
   config.include ActiveStorageHelpers, type: :feature
   config.include ActiveStorageHelpers, type: :controller
 
-  Capybara.javascript_driver = :selenium_chrome
+  Capybara.javascript_driver = :selenium_chrome_headless
 
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
   config.fixture_path = "#{::Rails.root}/spec/fixtures"

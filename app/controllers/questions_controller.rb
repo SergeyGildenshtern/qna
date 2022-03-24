@@ -6,6 +6,15 @@ class QuestionsController < ApplicationController
          find: -> { Question.with_attached_files.find(params[:id]) }
   expose :answer, -> { Answer.new }
 
+  def show
+    answer.links.build
+  end
+
+  def new
+    question.links.build
+    question.reward = Reward.new(question: question)
+  end
+
   def create
     if question.save
       redirect_to question, notice: 'Your question successfully created.'
@@ -30,6 +39,8 @@ class QuestionsController < ApplicationController
   private
 
   def question_params
-    params.require(:question).permit(:title, :body, files: [])
+    params.require(:question).permit(:title, :body, files: [],
+                                     links_attributes: [:name, :url],
+                                     reward_attributes: [:name, :image])
   end
 end

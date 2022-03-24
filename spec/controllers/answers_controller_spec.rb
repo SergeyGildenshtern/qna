@@ -99,10 +99,18 @@ RSpec.describe AnswersController, type: :controller do
   describe 'PUT #update_best' do
     context 'author of question' do
       let(:question) { create(:question, author: user) }
-      let!(:answer) { create(:answer, question: question) }
+      let!(:reward) { create(:reward, question: question) }
+      let!(:answer) { create(:answer, question: question, author: create(:user)) }
 
       it 'changes answer attribute' do
         expect { put :update_best, params: { id: answer }, format: :js }.to change(question, :best_answer).from(nil).to(answer)
+      end
+
+      it 'changes reward attribute' do
+        put :update_best, params: { id: answer }, format: :js
+        reward.reload
+
+        expect(reward.user).to eq answer.author
       end
 
       it 'renders update_best view' do
@@ -112,10 +120,18 @@ RSpec.describe AnswersController, type: :controller do
     end
 
     context 'not author of question' do
-      let!(:answer) { create(:answer, question: question) }
+      let!(:reward) { create(:reward, question: question) }
+      let!(:answer) { create(:answer, question: question, author: create(:user)) }
 
       it 'does not changes answer attribute' do
         expect { put :update_best, params: { id: answer }, format: :js }.to_not change(question, :best_answer)
+      end
+
+      it 'does not changes reward attribute' do
+        put :update_best, params: { id: answer }, format: :js
+        reward.reload
+
+        expect(reward.user).to_not eq answer.author
       end
 
       it 'renders update_best view' do

@@ -18,12 +18,15 @@ class AnswersController < ApplicationController
   end
 
   def update_best
-    answer.update_best! if current_user.author?(answer.question)
+    if current_user.author?(answer.question)
+      answer.update_best!
+      answer.question.reward&.update(user: answer.author)
+    end
   end
 
   private
 
   def answer_params
-    params.require(:answer).permit(:body, files: [])
+    params.require(:answer).permit(:body, files: [], links_attributes: [:name, :url])
   end
 end
