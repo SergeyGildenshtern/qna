@@ -1,15 +1,27 @@
 .answer*{data: {answer: {id: answer.id} } }
   h3.title= 'Best answer'
   p= answer.body
+
+  .answer-links= render 'shared/links', resource: answer
+
+  .answer-files= render 'shared/files', resource: answer
+
   - if current_user&.author? answer.question
-    = form_with url: update_best_answer_path(answer), method: :put, id: "best-answer", class: 'hidden', local: false do |f|
+    = form_with url: update_best_answer_path(answer), class: 'hidden', id: 'best-answer', method: :put, local: false do |f|
       = f.submit 'Best answer'
+
   - if current_user&.author? answer
     = form_with model: answer, html: { method: :delete }, local: false do |f|
       = f.submit 'Delete answer'
     = link_to 'Edit', '#', class: 'edit-answer-link', data: { answer_id: answer.id }
     .errors
     = form_with model: answer, html: { id: "edit-answer-#{answer.id}" }, class: 'hidden', local: false do |f|
-      = f.label :body, 'Your answer'
-      = f.text_area :body
-      = f.submit 'Save'
+      p
+        = f.label :body, 'Your answer'
+        = f.text_area :body
+      p
+        = f.label :files
+        = f.file_field :files, multiple: true, direct_upload: true
+      = render 'shared/link_form', f: f
+      p= f.submit 'Save'
+

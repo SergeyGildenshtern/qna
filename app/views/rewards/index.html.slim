@@ -1,0 +1,13 @@
+h1 Your rewards
+
+- if rewards.present?
+  table
+    tr
+      th Image
+      th Name
+      th Question
+    = render rewards
+- else
+  h4 You don't have rewards
+
+p= link_to 'Back', questions_path

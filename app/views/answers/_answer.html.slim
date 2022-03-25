@@ -1,6 +1,8 @@
 .answer*{data: {answer: {id: answer.id} } }
   p= answer.body
 
+  .answer-links= render 'shared/links', resource: answer
+
   .answer-files= render 'shared/files', resource: answer
 
   - if current_user&.author? answer.question
@@ -19,4 +21,5 @@
       p
         = f.label :files
         = f.file_field :files, multiple: true, direct_upload: true
+      = render 'shared/link_form', f: f
       p= f.submit 'Save'

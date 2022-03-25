@@ -1,6 +1,8 @@
 h1.title= question.title
 p.question= question.body
 
+.question-links= render 'shared/links', resource: question
+
 .question-files= render 'shared/files', resource: question
 
 - if current_user&.author? question
@@ -18,7 +20,10 @@ p.question= question.body
     p
       = f.label :files
       = f.file_field :files, multiple: true, direct_upload: true
+    = render 'shared/link_form', f: f
     p= f.submit 'Save'
+
+= render 'reward', reward: question.reward
 
 = render 'answers/form'
 

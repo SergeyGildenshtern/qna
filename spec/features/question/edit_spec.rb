@@ -9,6 +9,8 @@ feature 'User can edit his question', "
   given(:user) { create(:user) }
   given(:question) { create(:question, author: user) }
   given(:other_question) { create(:question, author: create(:user)) }
+  given!(:link) { create(:link, linkable: question) }
+  given(:new_url) { 'https://yandex.ru/' }
 
   describe 'Authenticated user', js: true do
     background do
@@ -41,6 +43,24 @@ feature 'User can edit his question', "
         expect(page).to have_link 'rails_helper.rb'
         expect(page).to have_link 'spec_helper.rb'
       end
+    end
+
+    scenario 'edits his answer with new link' do
+      click_on 'Edit question'
+
+      within '#edit-question' do
+        click_on 'add link'
+
+        within all('.nested-fields').last do
+          fill_in 'Link name', with: 'yandex'
+          fill_in 'Url', with: new_url
+        end
+
+        click_on 'Save'
+      end
+
+      expect(page).to have_link 'google', href: link.url
+      expect(page).to have_link 'yandex', href: new_url
     end
 
     scenario 'edits his question with errors' do

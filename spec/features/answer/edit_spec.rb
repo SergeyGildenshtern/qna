@@ -10,6 +10,8 @@ feature 'User can edit his answer', "
   given(:question) { create(:question) }
   given!(:answer) { create(:answer, question: question, author: user) }
   given!(:other_answer) { create(:answer, question: create(:question), author: create(:user)) }
+  given!(:link) { create(:link, linkable: answer) }
+  given(:new_url) { 'https://yandex.ru/' }
 
   describe 'Authenticated user', js: true do
     background do
@@ -43,6 +45,23 @@ feature 'User can edit his answer', "
         expect(page).to have_link 'image.jpg'
         expect(page).to have_link 'rails_helper.rb'
         expect(page).to have_link 'spec_helper.rb'
+      end
+    end
+
+    scenario 'edits his answer with new link' do
+      within '.answers' do
+        click_on 'Edit'
+        click_on 'add link'
+
+        within all('.nested-fields').last do
+          fill_in 'Link name', with: 'yandex'
+          fill_in 'Url', with: new_url
+        end
+
+        click_on 'Save'
+
+        expect(page).to have_link 'google', href: link.url
+        expect(page).to have_link 'yandex', href: new_url
       end
     end
 
