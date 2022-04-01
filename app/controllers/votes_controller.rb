@@ -15,13 +15,13 @@ class VotesController < ApplicationController
     end
 
     respond_to do |format|
-      format.json { render json: Hash[:votable, votable, :rating, votable.rating, :new_vote, new_vote] }
+      format.json { render json: { votable: votable, rating: votable.rating, new_vote: new_vote } }
     end
   end
 
   private
 
   def author_verification
-    return head(:forbidden) if votable.author == current_user
+    return head(:forbidden) if current_user.author? votable
   end
 end

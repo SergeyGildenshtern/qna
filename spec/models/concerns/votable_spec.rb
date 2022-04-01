@@ -27,15 +27,15 @@ shared_examples_for 'votable' do
     end
 
     it 'user is vote' do
-      model.votes.create(user: user, status: true)
+      model.votes.create(user: user, status: 1)
       expect(model).to be_voted(user)
     end
   end
 
   describe 'Getting the votable rating' do
     let!(:model) { create(described_class.to_s.underscore) }
-    let!(:vote1) { create(:vote, votable: model, user: create(:user), status: false) }
-    let!(:vote2) { create(:vote, votable: model, user: create(:user), status: false) }
+    let!(:vote1) { create(:vote, votable: model, user: create(:user), status: -1) }
+    let!(:vote2) { create(:vote, votable: model, user: create(:user), status: -1) }
 
     it "returns a number, the difference between 'for' and 'against'" do
       expect(model.rating).to eq -2

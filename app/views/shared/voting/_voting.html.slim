@@ -2,6 +2,6 @@
   - if !user_signed_in? || current_user&.author?(votable)
     .result= "Rating: #{votable.rating}"
   - else
-    = render 'shared/voting/vote', votable: votable, status: true
+    = render 'shared/voting/vote', votable: votable, status: 1
     .result= "Rating: #{votable.rating}"
-    = render 'shared/voting/vote', votable: votable, status: false
+    = render 'shared/voting/vote', votable: votable, status: -1

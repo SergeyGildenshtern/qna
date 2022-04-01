@@ -10,19 +10,19 @@ RSpec.describe VotesController, type: :controller do
     context 'not author of votable' do
       it 'save the vote' do
         expect {
-          post :vote, params: { votable_id: answer, votable: answer.class.name, status: true }, format: :json
+          post :vote, params: { votable_id: answer, votable: answer.class.name, status: 1 }, format: :json
         }.to change(answer.votes, :count).by(1)
       end
 
       it 'delete the vote' do
-        answer.votes.create(user:user, status: true)
+        answer.votes.create(user:user, status: 1)
         expect {
-          post :vote, params: { votable_id: answer, votable: answer.class.name, status: true }, format: :json
+          post :vote, params: { votable_id: answer, votable: answer.class.name, status: 1 }, format: :json
         }.to change(answer.votes, :count).by(-1)
       end
 
       it 'returns a 200 OK status' do
-        post :vote, params: { votable_id: answer, votable: answer.class.name, status: true }, format: :json
+        post :vote, params: { votable_id: answer, votable: answer.class.name, status: 1 }, format: :json
         expect(response).to have_http_status(:success)
       end
     end
@@ -32,19 +32,19 @@ RSpec.describe VotesController, type: :controller do
 
       it 'does not save the vote' do
         expect {
-          post :vote, params: { votable_id: answer, votable: answer.class.name, status: true }, format: :json
+          post :vote, params: { votable_id: answer, votable: answer.class.name, status: 1 }, format: :json
         }.to_not change(answer.votes, :count)
       end
 
       it 'does not delete the vote' do
-        answer.votes.create(user:user, status: true)
+        answer.votes.create(user:user, status: 1)
         expect {
-          post :vote, params: { votable_id: answer, votable: answer.class.name, status: true }, format: :json
+          post :vote, params: { votable_id: answer, votable: answer.class.name, status: 1 }, format: :json
         }.to_not change(answer.votes, :count)
       end
 
       it 'returns a 403 forbidden status' do
-        post :vote, params: { votable_id: answer, votable: answer.class.name, status: true }, format: :json
+        post :vote, params: { votable_id: answer, votable: answer.class.name, status: 1 }, format: :json
         expect(response).to have_http_status(:forbidden)
       end
     end

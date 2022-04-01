@@ -14,6 +14,6 @@ module Votable
   end
 
   def rating
-    votes.count { |v| v.status } - votes.count { |v| !v.status }
+    votes.sum(:status)
   end
 end
