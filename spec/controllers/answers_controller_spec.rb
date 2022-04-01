@@ -12,13 +12,13 @@ RSpec.describe AnswersController, type: :controller do
         expect {
           post :create,
                params: { answer: attributes_for(:answer), question_id: question },
-               format: :js
+               format: :json
         }.to change(question.answers, :count).by(1)
       end
 
       it 'renders create template' do
-        post :create, params: { answer: attributes_for(:answer), question_id: question, format: :js }
-        expect(response).to render_template :create
+        post :create, params: { answer: attributes_for(:answer), question_id: question, format: :json }
+        expect(response).to have_http_status(:success)
       end
     end
 
@@ -27,13 +27,13 @@ RSpec.describe AnswersController, type: :controller do
         expect {
           post :create,
                params: { answer: attributes_for(:answer, :invalid), question_id: question },
-               format: :js
+               format: :json
         }.to_not change(Answer, :count)
       end
 
       it 'renders create template' do
-        post :create, params: { answer: attributes_for(:answer, :invalid), question_id: question, format: :js }
-        expect(response).to render_template :create
+        post :create, params: { answer: attributes_for(:answer, :invalid), question_id: question, format: :json }
+        expect(response).to have_http_status(:unprocessable_entity)
       end
     end
   end
