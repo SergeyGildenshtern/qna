@@ -1,0 +1,3 @@
+= form_with url: votes_path(votable_id: votable.id, votable: votable.class.name, status: status),
+        data: { type: :json }, class: "new-vote vote-#{status ? 'up' : 'down'}", local: false do |f|
+  = f.submit "vote #{status ? 'up' : 'down'}", disabled: disabled ||= false
