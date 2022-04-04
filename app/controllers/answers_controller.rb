@@ -6,7 +6,15 @@ class AnswersController < ApplicationController
          find: -> { Answer.with_attached_files.find(params[:id]) }
 
   def create
-    answer.save
+    respond_to do |format|
+      if answer.save
+        format.html {render answer}
+        format.json { render json: answer }
+      else
+        format.html { render partial: 'shared/errors', locals: { resource: answer }, status: :unprocessable_entity }
+        format.json { render json: answer.errors.full_messages, status: :unprocessable_entity }
+      end
+    end
   end
 
   def update

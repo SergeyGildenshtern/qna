@@ -1,4 +1,6 @@
 .answer*{data: {answer: {id: answer.id} } }
+  = render 'shared/voting/voting', votable: answer
+
   p= answer.body
 
   .answer-links= render 'shared/links', resource: answer
