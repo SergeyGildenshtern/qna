@@ -13,6 +13,8 @@ module Qna
 
     config.active_storage.replace_on_assign_to_many = false
 
+    config.action_cable.disable_request_forgery_protection = false
+
     # Configuration for the application, engines, and railties goes here.
     #
     # These settings can be overridden in specific environments using the files
