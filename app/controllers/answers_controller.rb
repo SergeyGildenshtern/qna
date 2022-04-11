@@ -38,19 +38,16 @@ class AnswersController < ApplicationController
 
   def publish_answer
     return if answer.errors.any?
-    ApplicationController.renderer.instance_variable_set(
-      :@env, {
-      "HTTP_HOST"=>"localhost:3000",
-      "HTTPS"=>"off",
-      "REQUEST_METHOD"=>"GET",
-      "SCRIPT_NAME"=>"",
-      "warden" => warden
-    }
-    )
     ActionCable.server.broadcast(
       "questions/#{answer.question_id}/answers",
       {
-        answer: ApplicationController.render(partial: 'answers/answer', locals: { answer: answer }),
+        answer: ApplicationController.render(
+          partial: 'answers/answer',
+          locals: {
+            answer: answer,
+            current_user: current_user
+          }
+        ),
         answer_id: answer.id,
         answer_author_id: answer.author_id,
         question_author_id: answer.question.author_id

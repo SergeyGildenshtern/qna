@@ -8,24 +8,24 @@ $(document).on('turbolinks:load', function(){
 
                 if (gon.user_id) {
                     if (gon.user_id !== data.answer_author_id) {
-                        RemoveAnswerAuthorElements()
+                        removeAnswerAuthorElements()
                     }
                     if (gon.user_id !== data.question_author_id) {
-                        RemoveQuestionAuthorElements()
+                        removeQuestionAuthorElements()
                     }
                 } else {
-                    RemoveAnswerAuthorElements()
-                    RemoveQuestionAuthorElements()
+                    removeAnswerAuthorElements()
+                    removeQuestionAuthorElements()
                 }
             }
         })
     }
 })
 
-function RemoveQuestionAuthorElements() {
+function removeQuestionAuthorElements() {
     $(`.answer[data-answer-id='${data.answer_id}'] .question-author-elements`).remove()
 }
 
-function RemoveAnswerAuthorElements() {
+function removeAnswerAuthorElements() {
     $(`.answer[data-answer-id='${data.answer_id}'] .answer-author-elements`).remove()
 }

@@ -1,13 +1,13 @@
 .answer*{data: {answer: {id: answer.id} } }
-  = render 'shared/votes', votable: answer
+  = render 'shared/votes', votable: answer, current_user: current_user
 
   p= answer.body
 
-  .answer-links= render 'shared/links', resource: answer
+  .answer-links= render 'shared/links', resource: answer, current_user: current_user
 
-  .answer-files= render 'shared/files', resource: answer
+  .answer-files= render 'shared/files', resource: answer, current_user: current_user
 
-  = render 'shared/comments', commentable: answer
+  = render 'shared/comments', commentable: answer, current_user: current_user
 
   - if current_user&.author? answer.question
     .question-author-elements
