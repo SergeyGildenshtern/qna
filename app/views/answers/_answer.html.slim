@@ -1,27 +1,31 @@
 .answer*{data: {answer: {id: answer.id} } }
-  = render 'shared/voting/voting', votable: answer
+  = render 'shared/votes', votable: answer, current_user: current_user
 
   p= answer.body
 
-  .answer-links= render 'shared/links', resource: answer
+  .answer-links= render 'shared/links', resource: answer, current_user: current_user
 
-  .answer-files= render 'shared/files', resource: answer
+  .answer-files= render 'shared/files', resource: answer, current_user: current_user
+
+  = render 'shared/comments', commentable: answer, current_user: current_user
 
   - if current_user&.author? answer.question
-    = form_with url: update_best_answer_path(answer), method: :put, local: false do |f|
-      = f.submit 'Best answer'
+    .question-author-elements
+      = form_with url: update_best_answer_path(answer), method: :put, local: false do |f|
+        = f.submit 'Best answer'
 
   - if current_user&.author? answer
-    = form_with model: answer, html: { method: :delete }, local: false do |f|
-      = f.submit 'Delete answer'
-    = link_to 'Edit', '#', class: 'edit-answer-link', data: { answer_id: answer.id }
-    .errors
-    = form_with model: answer, html: { id: "edit-answer-#{answer.id}" }, class: 'hidden', local: false do |f|
-      p
-        = f.label :body, 'Your answer'
-        = f.text_area :body
-      p
-        = f.label :files
-        = f.file_field :files, multiple: true, direct_upload: true
-      = render 'shared/link_form', f: f
-      p= f.submit 'Save'
+    .answer-author-elements
+      = form_with model: answer, html: { method: :delete }, local: false do |f|
+        = f.submit 'Delete answer'
+      = link_to 'Edit', '#', class: 'edit-answer-link', data: { answer_id: answer.id }
+      .errors
+      = form_with model: answer, html: { id: "edit-answer-#{answer.id}" }, class: 'hidden', local: false do |f|
+        p
+          = f.label :body, 'Your answer'
+          = f.text_area :body
+        p
+          = f.label :files
+          = f.file_field :files, multiple: true, direct_upload: true
+        = render 'shared/link_form', f: f
+        p= f.submit 'Save'

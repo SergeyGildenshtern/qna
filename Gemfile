@@ -42,6 +42,8 @@ gem 'aws-sdk-s3', '~> 1'
 gem 'validate_url'
 # See https://github.com/nathanvda/cocoon
 gem "cocoon"
+# See https://github.com/gazay/gon
+gem 'gon'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console

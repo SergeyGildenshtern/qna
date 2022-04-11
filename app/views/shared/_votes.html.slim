@@ -1,0 +1,7 @@
+.voting*{data: {votable: {id: votable.id} } }
+  - if current_user.blank? || current_user&.author?(votable)
+    .result= "Rating: #{votable.rating}"
+  - else
+    = render 'votes/vote', votable: votable, status: 1
+    .result= "Rating: #{votable.rating}"
+    = render 'votes/vote', votable: votable, status: -1

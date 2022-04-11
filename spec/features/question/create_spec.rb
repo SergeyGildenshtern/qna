@@ -44,6 +44,34 @@ feature 'User can create question', "
     end
   end
 
+  context 'Multiple sessions', js: true do
+    scenario 'All users see new question in real-time' do
+      Capybara.using_session('author') do
+        login(user)
+        visit questions_path
+      end
+
+      Capybara.using_session('guest') do
+        visit questions_path
+      end
+
+      Capybara.using_session('author') do
+        click_on 'Ask question'
+        fill_in 'Title', with: 'Question title'
+        fill_in 'Body', with: 'Question body'
+        click_on 'Ask'
+
+        expect(page).to have_content 'Your question successfully created.'
+        expect(page).to have_content 'Question title'
+        expect(page).to have_content 'Question body'
+      end
+
+      Capybara.using_session('guest') do
+        expect(page).to have_link 'Question title'
+      end
+    end
+  end
+
   scenario 'Unauthenticated user tries to ask a question' do
     visit questions_path
     click_on 'Ask question'

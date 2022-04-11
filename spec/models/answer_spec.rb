@@ -1,8 +1,10 @@
 require 'rails_helper'
-require 'models/concerns/votable_spec'
+require 'models/concerns/votable'
+require 'models/concerns/commentable'
 
 RSpec.describe Answer, type: :model do
   it_behaves_like 'votable'
+  it_behaves_like 'commentable'
 
   it { should belong_to(:question) }
   it { should belong_to(:author) }

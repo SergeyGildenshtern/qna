@@ -1,0 +1,9 @@
+div class= "#{commentable.class.to_s.downcase}-#{commentable.id}-comments"
+  .comment-errors
+
+  b Comments:
+  ul.comments
+    = render commentable.comments
+
+  - if current_user.present?
+    = render 'comments/form', commentable: commentable

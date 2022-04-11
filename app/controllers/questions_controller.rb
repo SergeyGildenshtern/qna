@@ -1,5 +1,8 @@
 class QuestionsController < ApplicationController
   before_action :authenticate_user!, except: %i[index show]
+  before_action :gon_question
+  after_action :publish_question, only: :create
+
   expose :questions, -> { Question.all }
   expose :question,
          build: ->(question_params) { Question.new(question_params.merge(author: current_user)) },
@@ -37,6 +40,24 @@ class QuestionsController < ApplicationController
   end
 
   private
+
+  def publish_question
+    return if question.errors.any?
+    ActionCable.server.broadcast(
+      'questions',
+      ApplicationController.render(
+        partial: 'questions/question',
+        locals: {
+          question: question,
+          current_user: current_user
+        }
+      )
+    )
+  end
+
+  def gon_question
+    gon.question_id = question.id
+  end
 
   def question_params
     params.require(:question).permit(:title, :body, files: [],
