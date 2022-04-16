@@ -9,23 +9,23 @@
 
   = render 'shared/comments', commentable: answer, current_user: current_user
 
-  - if current_user&.author? answer.question
-    .question-author-elements
-      = form_with url: update_best_answer_path(answer), method: :put, local: false do |f|
-        = f.submit 'Best answer'
+  - if can?(:update_best, answer)
+    = form_with url: update_best_answer_path(answer), method: :put, local: false do |f|
+      = f.submit 'Best answer'
 
-  - if current_user&.author? answer
-    .answer-author-elements
-      = form_with model: answer, html: { method: :delete }, local: false do |f|
-        = f.submit 'Delete answer'
-      = link_to 'Edit', '#', class: 'edit-answer-link', data: { answer_id: answer.id }
-      .errors
-      = form_with model: answer, html: { id: "edit-answer-#{answer.id}" }, class: 'hidden', local: false do |f|
-        p
-          = f.label :body, 'Your answer'
-          = f.text_area :body
-        p
-          = f.label :files
-          = f.file_field :files, multiple: true, direct_upload: true
-        = render 'shared/link_form', f: f
-        p= f.submit 'Save'
+  - if can?(:destroy, answer)
+    = form_with model: answer, html: { method: :delete }, local: false do |f|
+      = f.submit 'Delete answer'
+
+  - if can?(:update, answer)
+    = link_to 'Edit', '#', class: 'edit-answer-link', data: { answer_id: answer.id }
+    .errors
+    = form_with model: answer, html: { id: "edit-answer-#{answer.id}" }, class: 'hidden', local: false do |f|
+      p
+        = f.label :body, 'Your answer'
+        = f.text_area :body
+      p
+        = f.label :files
+        = f.file_field :files, multiple: true, direct_upload: true
+      = render 'shared/link_form', f: f
+      p= f.submit 'Save'

@@ -30,7 +30,7 @@ RSpec.describe LinksController, type: :controller do
 
       it 'renders delete view' do
         delete :destroy, params: { id: link }, format: :js
-        expect(response).to render_template :destroy
+        expect(response).to have_http_status(:forbidden)
       end
     end
   end

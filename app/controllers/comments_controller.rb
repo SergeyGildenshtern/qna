@@ -5,6 +5,8 @@ class CommentsController < ApplicationController
   expose :commentable, find: -> { commentable_name.singularize.capitalize.constantize.find(params[:commentable_id]) }
   expose :comment, build: ->{ current_user.comments.create(comment_params.merge(commentable: commentable)) }
 
+  authorize_resource
+
   def create
   end
 

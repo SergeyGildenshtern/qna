@@ -3,7 +3,7 @@ $('.answer[data-answer-id='+ <%= answer.id %> +']').remove();
 var bestAnswer = $('.best-answer .answer');
 if (bestAnswer != null) {
     bestAnswer.children('.title').remove();
-    bestAnswer.children('form#best-answer').removeClass('hidden');;
+    bestAnswer.children('form#best-answer').removeClass('hidden');
     bestAnswer.remove().appendTo('.answers');
 }
 $('.best-answer').html('<%= j render 'best_answer', answer: answer %>');
