@@ -27,7 +27,7 @@ RSpec.describe FilesController, type: :controller do
         expect { delete :destroy, params: { id: file }, format: :js }.to_not change(question.files, :count)
       end
 
-      it 'renders delete view' do
+      it 'returns a 403 forbidden status' do
         delete :destroy, params: { id: file }, format: :js
         expect(response).to have_http_status(:forbidden)
       end

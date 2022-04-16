@@ -89,7 +89,7 @@ RSpec.describe AnswersController, type: :controller do
         expect { delete :destroy, params: { id: answer }, format: :js }.to_not change(Answer, :count)
       end
 
-      it 'renders destroy view' do
+      it 'returns a 403 forbidden status' do
         delete :destroy, params: { id: answer }, format: :js
         expect(response).to have_http_status(:forbidden)
       end
@@ -134,7 +134,7 @@ RSpec.describe AnswersController, type: :controller do
         expect(reward.user).to_not eq answer.author
       end
 
-      it 'renders update_best view' do
+      it 'returns a 403 forbidden status' do
         put :update_best, params: { id: answer }, format: :js
         expect(response).to have_http_status(:forbidden)
       end
