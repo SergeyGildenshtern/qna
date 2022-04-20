@@ -2,6 +2,6 @@
   - resource.files.each do |file|
     .file*{data: {file: {id: file.id} } }
       = link_to file.filename.to_s, url_for(file)
-      - if current_user&.author? resource
+      - if can?(:destroy, file)
         = form_with url: file_path(file), method: :delete, local: false do |f|
           = f.submit 'Delete file'

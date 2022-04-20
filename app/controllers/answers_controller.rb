@@ -7,16 +7,10 @@ class AnswersController < ApplicationController
          build: ->(answer_params) { question.answers.new(answer_params.merge(author: current_user)) },
          find: -> { Answer.with_attached_files.find(params[:id]) }
 
+  load_and_authorize_resource
+
   def create
-    respond_to do |format|
-      if answer.save
-        format.html { render answer }
-        format.json { render json: answer }
-      else
-        format.html { render partial: 'shared/errors', locals: { resource: answer }, status: :unprocessable_entity }
-        format.json { render json: answer.errors.full_messages, status: :unprocessable_entity }
-      end
-    end
+    answer.save
   end
 
   def update
@@ -24,14 +18,12 @@ class AnswersController < ApplicationController
   end
 
   def destroy
-    answer.destroy if current_user.author?(answer)
+    answer.destroy
   end
 
   def update_best
-    if current_user.author?(answer.question)
-      answer.update_best!
-      answer.question.reward&.update(user: answer.author)
-    end
+    answer.update_best!
+    answer.question.reward&.update(user: answer.author)
   end
 
   private
@@ -41,16 +33,9 @@ class AnswersController < ApplicationController
     ActionCable.server.broadcast(
       "questions/#{answer.question_id}/answers",
       {
-        answer: ApplicationController.render(
-          partial: 'answers/answer',
-          locals: {
-            answer: answer,
-            current_user: current_user
-          }
-        ),
+        answer: answer.body,
         answer_id: answer.id,
-        answer_author_id: answer.author_id,
-        question_author_id: answer.question.author_id
+        answer_author_id: answer.author_id
       }
     )
   end

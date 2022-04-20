@@ -5,5 +5,5 @@ div class= "#{commentable.class.to_s.downcase}-#{commentable.id}-comments"
   ul.comments
     = render commentable.comments
 
-  - if current_user.present?
+  - if can?(:create, Comment)
     = render 'comments/form', commentable: commentable

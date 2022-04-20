@@ -9,6 +9,8 @@ class QuestionsController < ApplicationController
          find: -> { Question.with_attached_files.find(params[:id]) }
   expose :answer, -> { Answer.new }
 
+  load_and_authorize_resource
+
   def show
     answer.links.build
   end
@@ -31,12 +33,8 @@ class QuestionsController < ApplicationController
   end
 
   def destroy
-    if current_user.author?(question)
-      question.destroy
-      redirect_to questions_path, notice: 'Your question successfully deleted.'
-    else
-      redirect_to question
-    end
+    question.destroy
+    redirect_to questions_path, notice: 'Your question successfully deleted.'
   end
 
   private
@@ -45,13 +43,10 @@ class QuestionsController < ApplicationController
     return if question.errors.any?
     ActionCable.server.broadcast(
       'questions',
-      ApplicationController.render(
-        partial: 'questions/question',
-        locals: {
-          question: question,
-          current_user: current_user
-        }
-      )
+      {
+        question: question.title,
+        question_id: question.id
+      }
     )
   end
 

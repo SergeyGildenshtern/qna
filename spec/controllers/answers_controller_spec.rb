@@ -12,13 +12,13 @@ RSpec.describe AnswersController, type: :controller do
         expect {
           post :create,
                params: { answer: attributes_for(:answer), question_id: question },
-               format: :json
+               format: :js
         }.to change(question.answers, :count).by(1)
       end
 
       it 'renders create template' do
-        post :create, params: { answer: attributes_for(:answer), question_id: question, format: :json }
-        expect(response).to have_http_status(:success)
+        post :create, params: { answer: attributes_for(:answer), question_id: question, format: :js }
+        expect(response).to render_template :create
       end
     end
 
@@ -27,19 +27,19 @@ RSpec.describe AnswersController, type: :controller do
         expect {
           post :create,
                params: { answer: attributes_for(:answer, :invalid), question_id: question },
-               format: :json
+               format: :js
         }.to_not change(Answer, :count)
       end
 
       it 'renders create template' do
-        post :create, params: { answer: attributes_for(:answer, :invalid), question_id: question, format: :json }
-        expect(response).to have_http_status(:unprocessable_entity)
+        post :create, params: { answer: attributes_for(:answer, :invalid), question_id: question, format: :js }
+        expect(response).to render_template :create
       end
     end
   end
 
   describe 'PATCH #update' do
-    let!(:answer) { create(:answer, question: question) }
+    let!(:answer) { create(:answer, question: question, author: user) }
 
     context 'with valid attributes' do
       it 'changes answer attributes' do
@@ -89,9 +89,9 @@ RSpec.describe AnswersController, type: :controller do
         expect { delete :destroy, params: { id: answer }, format: :js }.to_not change(Answer, :count)
       end
 
-      it 'renders destroy view' do
+      it 'returns a 403 forbidden status' do
         delete :destroy, params: { id: answer }, format: :js
-        expect(response).to render_template :destroy
+        expect(response).to have_http_status(:forbidden)
       end
     end
   end
@@ -134,9 +134,9 @@ RSpec.describe AnswersController, type: :controller do
         expect(reward.user).to_not eq answer.author
       end
 
-      it 'renders update_best view' do
+      it 'returns a 403 forbidden status' do
         put :update_best, params: { id: answer }, format: :js
-        expect(response).to render_template :update_best
+        expect(response).to have_http_status(:forbidden)
       end
     end
   end
