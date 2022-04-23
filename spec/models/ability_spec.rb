@@ -67,5 +67,8 @@ describe Ability, type: :model do
 
     it { should be_able_to :update_best, create(:answer, question: question) }
     it { should_not be_able_to :update_best, create(:answer, question: other_question) }
+
+    it { should be_able_to :me, User }
+    it { should be_able_to :other, User }
   end
 end

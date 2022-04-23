@@ -32,5 +32,6 @@ class Ability
     can :vote, [Question, Answer] do |obj|
       !user.author? obj
     end
+    can %i[me other], User
   end
 end
