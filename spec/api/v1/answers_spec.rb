@@ -24,14 +24,10 @@ describe 'Answers API', type: :request do
         get api_path, params: { access_token: access_token.token }, headers: headers
       end
 
-      it 'returns 200 status' do
-        expect(response).to be_successful
-      end
-
-      it 'returns all public fields' do
-        %w[id body author_id best created_at updated_at].each do |attr|
-          expect(json_answer[attr]).to eq answer.send(attr).as_json
-        end
+      it_behaves_like 'API public fields' do
+        let(:public_fields) { %w[id body author_id best created_at updated_at] }
+        let(:json_response) { json_answer }
+        let(:obj) { answer }
       end
 
       it_behaves_like 'API Commentable' do
@@ -66,18 +62,14 @@ describe 'Answers API', type: :request do
 
       before { get api_path, params: { access_token: access_token.token }, headers: headers }
 
-      it 'returns 200 status' do
-        expect(response).to be_successful
+      it_behaves_like 'API public fields' do
+        let(:public_fields) { %w[id body author_id best created_at updated_at] }
+        let(:json_response) { json_answer }
+        let(:obj) { answer }
       end
 
       it 'returns list of answers' do
         expect(json['answers'].size).to eq 3
-      end
-
-      it 'returns all public fields' do
-        %w[id body author_id best created_at updated_at].each do |attr|
-          expect(json_answer[attr]).to eq answer.send(attr).as_json
-        end
       end
     end
   end
@@ -94,18 +86,14 @@ describe 'Answers API', type: :request do
       context 'valid answer attributes' do
         before { post api_path, params: { answer: attributes_for(:answer), access_token: access_token.token } }
 
-        it 'returns 200 status' do
-          expect(response).to be_successful
-        end
-
         it 'saves a new answer in the database' do
           expect(Answer.count).to eq 1
         end
 
-        it 'render json answer' do
-          %w[id body author_id best created_at updated_at].each do |attr|
-            expect(json_answer[attr]).to eq Answer.last.send(attr).as_json
-          end
+        it_behaves_like 'API public fields' do
+          let(:public_fields) { %w[id body author_id best created_at updated_at] }
+          let(:json_response) { json_answer }
+          let(:obj) { Answer.last }
         end
       end
 
@@ -137,22 +125,19 @@ describe 'Answers API', type: :request do
 
     context 'authorized' do
       context 'valid answer attributes' do
-        before { patch api_path, params: { answer: { body: 'Answer body' }, access_token: access_token.token } }
-
-        it 'returns 200 status' do
-          expect(response).to be_successful
+        before do
+          patch api_path, params: { answer: { body: 'Answer body' }, access_token: access_token.token }
+          answer.reload
         end
 
         it 'changes answer attributes' do
-          answer.reload
           expect(answer.body).to eq 'Answer body'
         end
 
-        it 'render json answer' do
-          answer.reload
-          %w[id body author_id best created_at updated_at].each do |attr|
-            expect(json_answer[attr]).to eq answer.send(attr).as_json
-          end
+        it_behaves_like 'API public fields' do
+          let(:public_fields) { %w[id body author_id best created_at updated_at] }
+          let(:json_response) { json_answer }
+          let(:obj) { answer }
         end
       end
 

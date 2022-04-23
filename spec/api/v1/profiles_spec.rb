@@ -17,20 +17,15 @@ describe 'Profiles API', type: :request do
     context 'authorized' do
       before { get api_path, params: { access_token: access_token.token }, headers: headers }
 
-      it 'returns 200 status' do
-        expect(response).to be_successful
+      it_behaves_like 'API public fields' do
+        let(:public_fields) { %w[id email admin created_at updated_at] }
+        let(:json_response) { user_json }
+        let(:obj) { me }
       end
 
-      it 'returns all public fields' do
-        %w[id email admin created_at updated_at].each do |attr|
-          expect(user_json[attr]).to eq me.send(attr).as_json
-        end
-      end
-
-      it 'does not return private fields' do
-        %w[password encrypted_password].each do |attr|
-          expect(user_json).to_not have_key(attr)
-        end
+      it_behaves_like 'API private fields' do
+        let(:private_fields) { %w[password encrypted_password] }
+        let(:json_response) { user_json }
       end
     end
   end
@@ -49,10 +44,6 @@ describe 'Profiles API', type: :request do
 
       before { get api_path, params: { access_token: access_token.token }, headers: headers }
 
-      it 'returns 200 status' do
-        expect(response).to be_successful
-      end
-
       it 'returns list of users' do
         expect(json['users'].size).to eq 2
       end
@@ -63,16 +54,15 @@ describe 'Profiles API', type: :request do
         end
       end
 
-      it 'returns all public fields' do
-        %w[id email admin created_at updated_at].each do |attr|
-          expect(user_json[attr]).to eq user.send(attr).as_json
-        end
+      it_behaves_like 'API public fields' do
+        let(:public_fields) { %w[id email admin created_at updated_at] }
+        let(:json_response) { user_json }
+        let(:obj) { user }
       end
 
-      it 'does not return private fields' do
-        %w[password encrypted_password].each do |attr|
-          expect(user_json).to_not have_key(attr)
-        end
+      it_behaves_like 'API private fields' do
+        let(:private_fields) { %w[password encrypted_password] }
+        let(:json_response) { user_json }
       end
     end
   end
