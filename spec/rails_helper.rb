@@ -46,6 +46,8 @@ RSpec.configure do |config|
   config.include ActiveStorageHelpers, type: :feature
   config.include ActiveStorageHelpers, type: :controller
   config.include ActiveStorageHelpers, type: :model
+  config.include ActiveStorageHelpers, type: :request
+  config.include ApiHelpers, type: :request
 
   Capybara.javascript_driver = :selenium_chrome_headless
 
