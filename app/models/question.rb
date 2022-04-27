@@ -14,6 +14,8 @@ class Question < ApplicationRecord
 
   validates :title, :body, presence: true
 
+  scope :yesterday_questions, -> { where(created_at: 1.day.ago.all_day) }
+
   def best_answer
     answers.find_by(best: true)
   end

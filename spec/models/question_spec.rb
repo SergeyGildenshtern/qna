@@ -51,4 +51,17 @@ RSpec.describe Question, type: :model do
       expect(question.answers_without_best).to eq [other_answer]
     end
   end
+
+  describe 'Get all yesterday questions' do
+    let!(:today_questions) { create_list(:question, 3) }
+    let!(:yesterday_questions) { create_list(:question, 3, created_at: 1.day.ago) }
+
+    it 'return yesterday questions' do
+      expect(Question.yesterday_questions).to eq yesterday_questions
+    end
+
+    it 'does not return today questions' do
+      expect(Question.yesterday_questions).to_not eq today_questions
+    end
+  end
 end
