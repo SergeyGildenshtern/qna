@@ -70,5 +70,11 @@ describe Ability, type: :model do
 
     it { should be_able_to :me, User }
     it { should be_able_to :other, User }
+
+    it { should be_able_to :subscribe, other_question }
+    it { should_not be_able_to :subscribe, question }
+
+    it { should be_able_to :unsubscribe, question }
+    it { should_not be_able_to :unsubscribe, other_question }
   end
 end

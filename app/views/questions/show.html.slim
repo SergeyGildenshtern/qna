@@ -1,6 +1,12 @@
 h1.title= question.title
 p.question= question.body
 
+.mailing
+  - if can?(:subscribe, question)
+    = render 'mailings/subscription_form', question: question
+  - if can?(:unsubscribe, question)
+    = render 'mailings/unsubscribe_form', question: question
+
 .question-links= render 'shared/links', resource: question
 
 .question-files= render 'shared/files', resource: question

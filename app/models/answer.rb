@@ -12,8 +12,16 @@ class Answer < ApplicationRecord
 
   validates :body, presence: true
 
+  after_create :send_notification
+
   def update_best!
     question.best_answer&.update(best: false)
     update(best: true)
+  end
+
+  private
+
+  def send_notification
+    NotificationJob.perform_later(self.question)
   end
 end

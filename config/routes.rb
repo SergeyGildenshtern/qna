@@ -20,6 +20,7 @@ Rails.application.routes.draw do
   resources :links, only: %i[destroy]
   resources :rewards, only: %i[index]
   resources :comments, only: %i[create]
+  resources :mailings, only: %i[create destroy]
 
   post 'vote', to: 'votes#vote', as: 'votes'
 

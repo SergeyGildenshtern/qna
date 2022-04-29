@@ -28,10 +28,18 @@ class Ability
     can :destroy, [Question, Answer], author_id: user.id
     can :destroy, Link, linkable: { author_id: user.id }
     can :destroy, ActiveStorage::Attachment, record: { author_id: user.id }
+
     can :update_best, Answer, question: { author_id: user.id }
     can :vote, [Question, Answer] do |obj|
       !user.author? obj
     end
     can %i[me other], User
+
+    can :subscribe, Question do |question|
+      !user.subscribed? question
+    end
+    can :unsubscribe, Question do |question|
+      user.subscribed? question
+    end
   end
 end
