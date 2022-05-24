@@ -1,0 +1,2 @@
+= form_with url: mailing_path(current_user.mailing(question)), method: :delete, local: false do |f|
+  = f.submit 'Unsubscribe to mailing'

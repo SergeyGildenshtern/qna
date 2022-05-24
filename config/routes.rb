@@ -1,4 +1,10 @@
+require 'sidekiq/web'
+
 Rails.application.routes.draw do
+  authenticate :user, lambda { |u| u.admin? } do
+    mount Sidekiq::Web => '/sidekiq'
+  end
+
   use_doorkeeper
   devise_for :users
 
@@ -14,6 +20,7 @@ Rails.application.routes.draw do
   resources :links, only: %i[destroy]
   resources :rewards, only: %i[index]
   resources :comments, only: %i[create]
+  resources :mailings, only: %i[create destroy]
 
   post 'vote', to: 'votes#vote', as: 'votes'
 
